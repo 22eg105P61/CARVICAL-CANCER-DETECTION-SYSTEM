@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cervical Cancer Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #d81b60;
+            --primary-dark: #ad1457;
+            --accent: #8e24aa;
+            --bg-light: #fce4ec;
+            --text-dark: #333;
+            --text-light: #fff;
+            --input-bg: #f8f9fa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .wrapper {
+            background: #fff;
+            width: 900px;
+            max-width: 95%;
+            min-height: 600px;
+            display: flex;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .branding-side {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--text-light);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .branding-side::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .branding-side::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .brand-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .branding-side h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .branding-side p {
+            font-size: 14px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .form-side {
+            flex: 1.3;
+            padding: 50px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+            color: var(--primary-dark);
+        }
+
+        .form-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"], input[type="number"], select {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: var(--input-bg);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.1);
+        }
+
+        /* Image Upload Styling */
+        .upload-area {
+            border: 2px dashed #d0d0d0;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--input-bg);
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(216, 27, 96, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 50px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .upload-text strong {
+            color: var(--primary);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .submit-btn {
+            grid-column: span 2;
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @media (max-width: 768px) {
+            .wrapper {
+                flex-direction: column;
+                margin: 20px;
+            }
+            .branding-side {
+                padding: 30px;
+            }
+            .form-side {
+                padding: 30px;
+                max-height: none;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .submit-btn {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <div class="branding-side">
+            <div class="brand-icon">🎗️</div>
+            <h1>Cervical Cancer<br>Prediction AI</h1>
+            <p>"Empowering women with early detection through Neural Networks + Clinical Analysis"</p>
+        </div>
+
+        <div class="form-side">
+            <div class="form-header">
+                <h2>Patient Diagnostics</h2>
+                <small style="color:#777;">Enter clinical details and upload Pap smear image</small>
+            </div>
+
+            <form action="/predict" method="post" enctype="multipart/form-data" class="form-grid" id="uploadForm">
+                
+                <div class="input-group full-width">
+                    <label>Patient Full Name</label>
+                    <input type="text" name="name" placeholder="e.g. Jane Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number" name="age" placeholder="e.g. 35" min="18" max="100" required>
+                </div>
+
+                <div class="input-group">
+                    <label>No. of Pregnancies</label>
+                    <input type="number" name="preg" placeholder="e.g. 2" min="0" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Smoking History</label>
+                    <select name="smokes" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>HPV Test Result</label>
+                    <select name="hpv" required>
+                        <option value="0">Negative</option>
+                        <option value="1">Positive</option>
+                    </select>
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Pap Smear Result (Cytology)</label>
+                    <select name="pap" required>
+                        <option value="0">Normal</option>
+                        <option value="1">Abnormal / High Grade</option>
+                    </select>
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Upload Pap Smear Image <span style="color:var(--primary);">*</span></label>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <strong>Click to upload</strong> or drag and drop
+                        </div>
+                        <small style="color:#999;">PNG, JPG or JPEG (MAX. 16MB)</small>
+                        <input type="file" name="pap_image" id="fileInput" accept="image/png,image/jpeg,image/jpg" required>
+                        <div class="image-preview" id="imagePreview">
+                            <img id="previewImg" src="" alt="Preview">
+                            <div class="file-info" id="fileInfo"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-stethoscope"></i> Analyze Risk
+                </button>
+
+            </form>
+            
+            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
+                &copy; 2026 AI Medical Systems | Powered by PyTorch
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const fileInfo = document.getElementById('fileInfo');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Click to upload
+        uploadArea.addEventListener('click', (e) => {
+            if (e.target !== fileInput) {
+                fileInput.click();
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect(files[0]);
+            }
+        });
+
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            // Validate file type
+            if (!file.type.match('image/(png|jpeg|jpg)')) {
+                alert('Please upload a PNG or JPEG image');
+                fileInput.value = '';
+                return;
+            }
+
+            // Validate file size (16MB)
+            if (file.size > 16 * 1024 * 1024) {
+                alert('File size must be less than 16MB');
+                fileInput.value = '';
+                return;
+            }
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                imagePreview.style.display = 'block';
+                
+                // Show file info
+                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                fileInfo.textContent = `${file.name} (${sizeInMB} MB)`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Form submission
+        uploadForm.addEventListener('submit', () => {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+        });
+    </script>
+
+</body>
+</html>

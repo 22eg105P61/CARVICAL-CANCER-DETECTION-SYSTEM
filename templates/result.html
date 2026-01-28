@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --bg-color: #f0f2f5;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--primary);
+        }
+
+        .container {
+            background: var(--white);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px;
+        }
+
+        /* Header Design */
+        .header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Content Body */
+        .content {
+            padding: 40px;
+        }
+
+        .patient-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .value {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Dynamic Result Box */
+        .result-box {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid transparent;
+        }
+
+        /* Conditional Styling based on result */
+        .result-box.high {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .result-box.low {
+            background-color: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .result-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 25px;
+            text-align: left;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-bar-bg {
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            height: 12px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            /* Width is set inline via Jinja */
+            transition: width 0.5s ease;
+        }
+        
+        /* Button Group */
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--secondary);
+            border: 1px solid #bdc3c7;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ecf0f1;
+        }
+
+        /* PDF / Print Specific Styles */
+        @media print {
+            body { 
+                background: white; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
+            }
+            .container { 
+                box-shadow: none; 
+                border: 1px solid #ddd; 
+                margin: 0 auto; 
+                width: 100%;
+            }
+            .actions { display: none; } /* Hide buttons in PDF */
+            .header { -webkit-print-color-adjust: exact; }
+            .result-box { -webkit-print-color-adjust: exact; }
+            .progress-bar-fill { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>Medical Diagnostic Report</h2>
+            <p>Cervical Cancer Screening Analysis</p>
+        </div>
+
+        <div class="content">
+            
+            <div class="patient-info">
+                <div class="label">Patient Name</div>
+                <div class="value">{{ name }}</div>
+            </div>
+
+            <div class="result-box {{ color }}">
+                <div class="label" style="margin-bottom: 5px;">Prediction Result</div>
+                <div class="result-title">{{ result }}</div>
+                <div style="font-size: 13px; margin-top:5px;">
+                    {% if color == 'high' %}
+                        ⚠ Urgent consultation recommended
+                    {% else %}
+                        ✔ Results appear within normal range
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Risk Probability</span>
+                    <span>{{ prob }}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" 
+                         style="width: {{ prob }}%; background-color: {% if color == 'high' %}#e74c3c{% else %}#27ae60{% endif %};">
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="/download/{{ file }}" class="btn btn-primary">Download PDF Report</a>
+                <a href="/" class="btn btn-secondary">Check Another Patient</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
